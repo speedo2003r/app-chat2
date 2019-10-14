@@ -1,7 +1,7 @@
 <template>
     <div class="chat-app">
         <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage"></Conversation>
-        <ContactList :contacts="contacts" @selected="startConversationWith"></ContactList>
+        <ContactList :onlineUsers="onlineUsers" :contacts="contacts" @selected="startConversationWith"></ContactList>
     </div>
 </template>
 
@@ -15,6 +15,7 @@
         data(){
             return {
                 selectedContact: null,
+                onlineUsers: '',
                 messages: [],
                 contacts: [],
             }
@@ -27,6 +28,19 @@
             axios.get('/contacts').then((response)=>{
                 this.contacts = response.data;
             })
+                Echo.join('online')
+                    .here((users) => {
+                        this.onlineUsers = users;
+                        console.log(this.onlineUsers)
+                    })
+                    .joining((user)=>{
+                        this.onlineUsers.push(user)
+                        console.log(this.onlineUsers)
+                    })
+                    .leaving((user) => {
+                        this.onlineUsers = this.onlineUsers.filter((u) => {u != user});
+                        console.log(this.onlineUsers)
+                    });
         },
         methods: {
             startConversationWith(contact){

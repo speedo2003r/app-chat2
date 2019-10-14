@@ -5,6 +5,7 @@
                 <div class="contact">
                     <p>{{contact.name}}</p>
                     <p>{{contact.email}}</p>
+                    <online :friend="contact" :onlineUsers="onlineUsers"></online>
                 </div>
             </li>
         </ul>
@@ -12,8 +13,9 @@
 </template>
 
 <script>
+    import online from './Online';
     export default {
-        props:['contacts'],
+        props:['contacts','onlineUsers'],
         data(){
             return {
                 selected: 0,
@@ -24,6 +26,9 @@
                 this.selected = index;
                 this.$emit('selected',contact);
             }
+        },
+        components:{
+            online,
         }
     }
 </script>

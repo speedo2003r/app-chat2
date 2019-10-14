@@ -11,6 +11,9 @@
 |
 */
 
-Broadcast::channel('messages.{id}', function ($store, $id) {
-    return $store->id === (int) $id;
+Broadcast::channel('messages.{id}', function ($user, $id) {
+    return $user->id === (int) $id;
+});
+Broadcast::channel('online', function ($user) {
+    return $user;
 });
